@@ -682,7 +682,7 @@
                                     </a>
                                 </li>
                                 <li class=" sidebar-layout">
-                                    <a href="/labarugi" class="svg-icon">
+                                    <a href="/data-cashflow" class="svg-icon">
                                         <i class="">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -690,11 +690,11 @@
                                                     d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
                                             </svg>
                                         </i>
-                                        <span class="ml-2">Laba Rugi</span>
+                                        <span class="ml-2">Cash Flow</span>
                                     </a>
                                 </li>
                                 <li class=" sidebar-layout">
-                                    <a href="/coa" class="svg-icon">
+                                    <a href="/data-coa" class="svg-icon">
                                         <i class="">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">

@@ -7,11 +7,11 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Daftar COA </h4>
+                                <h4 class="card-title">Daftar Cashflow </h4>
                             </div>
                             <div class="header-action">
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                    data-target=".modal-coa">Tambah Coa</button>
+                                    data-target=".modal-cashflow">Tambah Cashflow</button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -21,26 +21,30 @@
                                 <table id="datatable-1" class="table data-table table-striped table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>No Reff</th>
-                                            <th>Nama Akun</th>
-                                            <th>Akun Coa</th>
+                                            <th>Nama</th>
+                                            <th class="text-right">Credit</th>
+                                            <th class="text-right">Debit</th>
                                             <th class="text-right">Saldo</th>
+                                            <th>Remarks</th>
+                                            <th>Date</th>
+                                            <th>Nama Coa</th>
+                                            <th>Dibuat Oleh</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($coa as $item)
+                                        @foreach ($cashflow as $item)
                                             <tr>
-                                                <td>{{ $item->no_reff }}</td>
-                                                <td>{{ $item->nama_akun }}</td>
-                                                <td>{{ $item->tipe_coa->name }}</td>
+                                                <td>{{ $item->name }}</td>
+                                                <td class="text-right">{{ formatToIDR($item->credit) }}</td>
+                                                <td class="text-right">{{ formatToIDR($item->debet) }}</td>
                                                 <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+                                                <td>{{ $item->remarks }}</td>
+                                                <td>{{ $item->date }}</td>
+                                                <td>{{ $item->coa->nama_akun }}</td>
+                                                <td>{{ $item->users->name }}</td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        {{-- <button class="btn btn-primary btn-sm mr-1" type="button"
-                                                            data-toggle="tooltip" data-placement="top" title="Detail COA">
-                                                            <i class="fa-solid fa-book"></i>
-                                                        </button> --}}
                                                         <button class="btn btn-success btn-sm mr-1 confirmPrintExcel"
                                                             type="button" data-placement="top" title="Print COA"
                                                             id="export-excel">
@@ -53,16 +57,19 @@
                                                             </i>
                                                         </button>
                                                         <button class="btn btn-warning btn-sm mr-1" type="button"
-                                                            data-toggle="modal" data-target=".modal-edit-coa"
-                                                            data-id="{{ $item->id }}" data-nama="{{ $item->nama_akun }}"
-                                                            data-saldo_coa="{{ $item->saldo }}"
-                                                            data-no_reff="{{ $item->no_reff }}"
-                                                            data-tipe_coa="{{ $item->tipe_coa_id }}" data-placement="top"
-                                                            title="Edit COA">
+                                                            data-toggle="modal" data-target=".modal-edit-cashflow"
+                                                            data-id="{{ $item->id }}" data-nama="{{ $item->name }}"
+                                                            data-credit="{{ $item->credit }}"
+                                                            data-debet="{{ $item->debet }}"
+                                                            data-saldo="{{ $item->saldo }}"
+                                                            data-remarks="{{ $item->remarks }}"
+                                                            data-date="{{ $item->date }}"
+                                                            data-coa_id="{{ $item->coa_id }}" data-placement="top"
+                                                            title="Edit Cashflow">
                                                             <i class="fa-solid fa-pencil"></i>
                                                         </button>
                                                         <form method="GET"
-                                                            action="{{ route('coa.delete-coa', ['id' => $item->id]) }}">
+                                                            action="{{ route('cashflow.delete', ['id' => $item->id]) }}">
                                                             <button type="submit"
                                                                 class="confirmDelete btn btn-sm btn-danger">
                                                                 <i class="fa fa-trash"></i>
@@ -75,10 +82,14 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>No Reff</th>
-                                            <th>Nama Akun</th>
-                                            <th>Tipe Coa</th>
+                                            <th>Nama</th>
+                                            <th>Credit</th>
+                                            <th>Debit</th>
                                             <th class="text-right">Saldo</th>
+                                            <th>Remarks</th>
+                                            <th>Date</th>
+                                            <th>Nama Coa</th>
+                                            <th>Dibuat Oleh</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
@@ -89,34 +100,42 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade modal-coa" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal fade modal-cashflow" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Tambah Coa</h5>
+                        <h5 class="modal-title">Tambah Cashflow</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times</span>
                         </button>
                     </div>
-                    <form method="POST" action="{{ route('coa.store-coa') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('cashflow.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
-                            <div class="form-group ">
-                                <input type="text" class="form-control" name="no_reff" placeholder="Nomor Reff">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" placeholder="Nama">
                             </div>
-                            <div class="form-group ">
-                                <input type="text" class="form-control" name="nama_akun" placeholder="Nama Coa">
+                            <div class="form-group">
+                                <input type="number" class="form-control" name="credit" placeholder="Credit">
                             </div>
-                            <div class="form-group ">
-                                <input type="number" class="form-control" name="saldo_coa" placeholder="Saldo Coa">
+                            <div class="form-group">
+                                <input type="number" class="form-control" name="debet" placeholder="Debet">
                             </div>
-                            <select class="form-control choicesjs" id="editTipeCoa" name="tipe_coa">
+                            <div class="form-group">
+                                <input type="number" class="form-control" name="saldo" placeholder="Saldo">
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="remarks" placeholder="Remarks"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="date" class="form-control" name="date" placeholder="Saldo Coa">
+                            </div>
+                            <select class="form-control choicesjs" name="coa_id">
                                 <option value=""> -- Select Coa -- </option>
-                                @foreach ($tipe_coa as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @foreach ($coa as $item)
+                                    <option value="{{ $item->id }}"> {{ $item->nama_akun }} </option>
                                 @endforeach
                             </select>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-sm close-modal">Close</button>
@@ -128,37 +147,48 @@
         </div>
 
         <!-- Edit COA Modal -->
-        <div class="modal fade modal-edit-coa" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade modal-edit-cashflow" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form id="editCoaForm" method="POST" action="{{ route('coa.update-coa') }}">
+                    <form id="editCashFlowForm" method="POST" action="{{ route('cashflow.update') }}">
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit COA</h5>
+                            <h5 class="modal-title">Edit Cash Flow</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <input type="hidden" name="id" id="editCoaId">
+                            <input type="hidden" name="id" id="editCashFlowId">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="editNoReff" name="no_reff"
-                                    placeholder="Nomor Reff" required>
+                                <input type="text" class="form-control" id="editNameCashflow" name="name"
+                                    placeholder="Nama">
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="editNamaCoa" name="nama_akun"
-                                    placeholder="Nama Coa" required>
+                                <input type="number" class="form-control" id="editCredit" name="credit"
+                                    placeholder="Credit">
                             </div>
                             <div class="form-group">
-                                <input type="number" class="form-control" id="editSaldoCoa" name="saldo_coa"
-                                    placeholder="Saldo Coa" required>
+                                <input type="number" class="form-control" id="editDebet" name="debet"
+                                    placeholder="Debet">
                             </div>
                             <div class="form-group">
-                                <select class="form-control choicesjs" id="editTipeCoa" name="tipe_coa">
+                                <input type="number" class="form-control" id="editSaldo" name="saldo"
+                                    placeholder="Saldo">
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="remarks" id="editRemarks" placeholder="Remarks"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="editDate" name="date"
+                                    placeholder="Saldo Coa">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control choicesjs" id="editCoa" name="coa_id">
                                     <option value=""> -- Select Coa -- </option>
-                                    @foreach ($tipe_coa as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @foreach ($coa as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_akun }} </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -182,23 +212,39 @@
         $(document).ready(function() {
             // Add click event listener to all buttons with the class "close-modal"
             $('.close-modal').click(function() {
-                $('.modal-coa').modal('hide')
+                $('.modal-cashflow').modal('hide')
             })
             // Modal edit
-            $('.modal-edit-coa').on('show.bs.modal', function(event) {
+            $('.modal-edit-cashflow').on('show.bs.modal', function(event) {
+                // data - id = "{{ $item->id }}"
+                // data - nama = "{{ $item->name }}"
+                // data - credit = "{{ $item->credit }}"
+                // data - debet = "{{ $item->debet }}"
+                // data - saldo = "{{ $item->saldo }}"
+                // data - remarks = "{{ $item->remarks }}"
+                // data - date = "{{ $item->date }}"
+                // data - coa_id = "{{ $item->coa_id }}"
                 var target = $(event.relatedTarget)
                 var id = target.data('id')
                 var nama = target.data('nama')
-                var saldo_coa = target.data('saldo_coa')
-                var tipe_coa = target.data('tipe_coa')
-                var no_reff = target.data('no_reff') // diambil dari parmas data-xxx
+                var credit = target.data('credit')
+                var debet = target.data('debet')
+                var saldo = target.data('saldo')
+                var remarks = target.data('remarks')
+                var date = target.data('date')
+                var coa_id = target.data('coa_id')
+                console.log('asdsad',id);
+
                 var modal = $(this)
-                modal.find('#editCoaId').val(id)
-                modal.find('#editNamaCoa').val(nama)
-                modal.find('#editSaldoCoa').val(saldo_coa)
-                modal.find('#editNoReff').val(no_reff)
+                modal.find('#editCashFlowId').val(id)
+                modal.find('#editNameCashflow').val(nama)
+                modal.find('#editCredit').val(credit)
+                modal.find('#editDebet').val(debet)
+                modal.find('#editSaldo').val(saldo)
+                modal.find('#editRemarks').val(remarks)
+                modal.find('#editDate').val(date)
+                modal.find('#editCoa').val(coa_id)
                 // modal.find('#editTipeCoa').val(tipe_coa)
-                modal.find('#editTipeCoa option[value="' + tipe_coa + '"]').prop('selected', true);
             })
 
             // Confirmation Button
@@ -267,7 +313,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('coa.export.pdf') }}'
+                        window.location.href = '{{ route('cashflow.export.pdf') }}'
                     }
                 })
             })
@@ -284,7 +330,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('coa.export.excel') }}'
+                        window.location.href = '{{ route('cashflow.export.excel') }}'
                     }
                 })
             })

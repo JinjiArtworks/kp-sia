@@ -14,5 +14,9 @@ class Coa extends Model
     {
         return $this->belongsTo(TipeCoa::class);
     }
+    public function cashflow()
+    {
+        return $this->hasMany(CashFlow::class);
+    }
     // foreign key yang dititipkan pada tabel, akan menggunakan relasi belongsTo. Sedangkan tabel utama yang menitipkan, di modelsnya menggunakan relasi hasMany / hasOne!!!!
 }

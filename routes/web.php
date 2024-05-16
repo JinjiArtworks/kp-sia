@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CashFlowController;
 use App\Http\Controllers\Admin\LabaRugiController;
 use App\Http\Controllers\Admin\NeracaController;
 use App\Http\Controllers\Admin\CoaController;
@@ -33,6 +34,17 @@ Route::middleware(['auth'])->group(function () {
         // Route::put('update-coa/{id}', [CoaController::class, 'update'])->name('update-coa');
         Route::put('update-coa', [CoaController::class, 'update'])->name('update-coa');
         Route::get('delete-coa/{id}', [CoaController::class, 'destroy'])->name('delete-coa');
+        Route::get('export-coa-excel', [CoaController::class, 'exportExcel'])->name('export.excel');
+        Route::get('export-coa-pdf', [CoaController::class, 'exportPDF'])->name('export.pdf');
+    });
+    Route::group(['as' => 'cashflow.'], function () {
+        Route::get('data-cashflow', [CashFlowController::class, 'index'])->name('cashflow');
+        Route::post('store', [CashFlowController::class, 'store'])->name('store');
+        Route::put('update', [CashFlowController::class, 'update'])->name('update');
+        Route::get('delete-cashflow/{id}', [CashFlowController::class, 'destroy'])->name('delete');
+        Route::get('export-cashflow-excel', [CashFlowController::class, 'exportExcel'])->name('export.excel');
+        Route::get('export-cashflow-pdf', [CashFlowController::class, 'exportPDF'])->name('export.pdf');
+        
     });
 });
 

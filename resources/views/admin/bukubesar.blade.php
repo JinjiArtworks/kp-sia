@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Laba Rugi </h4>
+                                <h4 class="card-title">Buku Besar </h4>
                             </div>
                             <div class="header-title">
                                 <button class="btn btn-success btn-sm confirmPrintExcel" type="button" data-placement="top"
@@ -24,7 +24,7 @@
                         <div class="card-body">
                             <p>Images in Bootstrap are made responsive to the image so that it scales
                                 with the parent element.</p>
-                            <form method="GET" action="{{ route('labarugi.filterDate') }}">
+                            <form method="GET" action="{{ route('buku-besar.filterDate') }}">
                                 <div class="date-filter mb-2">
                                     <input type="date" name="start_date" value="{{ $start_date }}"
                                         placeholder="Start Date"> -
@@ -37,27 +37,37 @@
                             <table id="datatable-1" class="table data-table table-striped table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>No Akun</th>
                                         <th>Nama Akun</th>
-                                        <th>Cashflow Name</th>
                                         <th>Tanggal</th>
+                                        <th>Keterangan</th>
+                                        <th class="text-right">Debit</th>
+                                        <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($cashflow as $item)
                                         <tr>
+                                            <td>{{ $item->no_reff }}</td>
                                             <td>{{ $item->nama_akun }}</td>
-                                            <td>{{ $item->name }}</td>
                                             <td>{{ $item->date }}</td>
+                                            <td>{{ $item->remarks }}</td>
+                                            <td class="text-right">{{ formatToIDR($item->debet) }}</td>
+                                            <td class="text-right">{{ formatToIDR($item->credit) }}</td>
                                             <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th>No Akun</th>
                                         <th>Nama Akun</th>
-                                        <th>Cashflow Name</th>
                                         <th>Tanggal</th>
+                                        <th>Keterangan</th>
+                                        <th class="text-right">Debit</th>
+                                        <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>
                                 </tfoot>
@@ -86,7 +96,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('labarugi.export.pdf') }}'
+                        window.location.href = '{{ route('buku-besar.export.pdf') }}'
                     }
                 })
             })
@@ -103,7 +113,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('labarugi.export.excel') }}'
+                        window.location.href = '{{ route('buku-besar.export.excel') }}'
                     }
                 })
             })

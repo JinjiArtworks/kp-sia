@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\CoaExport;
+use App\Exports\LabaRugiExport;
 use App\Http\Controllers\Controller;
+use App\Models\BukuBesar;
 use App\Models\Coa;
+use App\Models\LabaRugi;
 use App\Models\TipeCoa;
+use App\Models\TipePendapatan;
+use App\Models\TipePengeluaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 
@@ -22,60 +28,53 @@ class LabaRugiController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $coa = Coa::all();
-        $tipe_coa = TipeCoa::all();
-        return view('admin.labarugi', compact('coa', 'tipe_coa'));
-    }
-    public function store(Request $request)
-    {
-        Coa::create([
-            'nama_akun' => $request->nama_akun,
-            'saldo' => $request->saldo_coa,
-            'tipe_coa_id' => $request->tipe_coa,
-        ]);
-        return redirect('/data-coa')->with('success', 'coa berhasil ditambahkan');;
-    }
-    public function edit($id)
-    {
-        $coa = Coa::find($id);
-        return view('staff.coa.edit', compact('coa'));
-    }
-    public function update(Request $request)
-    {
-        $coa = Coa::find($request->id);
-        Coa::where('id', $request->id)
-            ->update(
-                [
-                    'nama_akun' => $request->nama_akun,
-                    'saldo' => $request->saldo_coa,
-                    'tipe_coa_id' => $request->tipe_coa ? $request->tipe_coa : $coa->tipe_coa_id,
-                ]
-            );
-        return redirect('/data-coa')->with('success', 'coa berhasil diubah');
-    }
-    public function destroy($id)
-    {
-        Coa::where('id', $id)->delete();
-        return redirect()->back();
+        // dd($request->all());
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $cashflow = DB::table('cashflow as cf')
+            ->select(
+                'cf.name',
+                'cf.saldo',
+                'cf.date',
+                'c.nama_akun',
+                'c.id',
+            )
+            ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->when(
+                $request->start_date !=  null,
+                function ($q) use ($request) {
+                    return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
+                }
+            )
+            // ->where('b.coa_id', ) menampilkan kode coa utk pendapatan dan biaya saja
+            ->get();
+        return view('admin.labarugi', compact('cashflow', 'start_date', 'end_date'));
     }
     public function exportExcel()
     {
         try {
-            return Excel::download(new CoaExport, 'coa.xlsx');
+            return Excel::download(new LabaRugiExport, 'labarugi.xlsx');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to export users: ' . $e->getMessage());
         }
     }
     public function exportPDF()
     {
-        $coa = Coa::all();
-        $html = view('pdf.coa', compact('coa'))->render(); // render html pdf page, not the main blade pages!
+        $cashflow = DB::table('cashflow as cf')
+            ->select(
+                'c.nama_akun',
+                'cf.name',
+                'cf.saldo',
+            )
+            ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->get();
+        $html = view('pdf.labarugi', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 
         $mpdf = new Mpdf();
         $mpdf->WriteHTML($html);
 
-        return $mpdf->Output('coa.pdf', 'D');
+        return $mpdf->Output('labarugi.pdf', 'D');
     }
 }

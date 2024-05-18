@@ -41,7 +41,7 @@
                                                             data-toggle="tooltip" data-placement="top" title="Detail COA">
                                                             <i class="fa-solid fa-book"></i>
                                                         </button> --}}
-                                                        <button class="btn btn-success btn-sm mr-1 confirmPrintExcel"
+                                                        {{-- <button class="btn btn-success btn-sm mr-1 confirmPrintExcel"
                                                             type="button" data-placement="top" title="Print COA"
                                                             id="export-excel">
                                                             <i class="fa-solid fa-print"></i>
@@ -51,7 +51,7 @@
                                                             data-placement="top" title="Print PDF" id="export-pdf">
                                                             <i class="fa-regular fa-file-zipper fa-lg">
                                                             </i>
-                                                        </button>
+                                                        </button> --}}
                                                         <button class="btn btn-warning btn-sm mr-1" type="button"
                                                             data-toggle="modal" data-target=".modal-edit-coa"
                                                             data-id="{{ $item->id }}" data-nama="{{ $item->nama_akun }}"
@@ -102,10 +102,10 @@
                         @csrf
                         <div class="modal-body">
                             <div class="form-group ">
-                                <input type="text" class="form-control" name="no_reff" placeholder="Nomor Reff">
+                                <input type="number" class="form-control" name="no_reff" placeholder="Nomor Reff">
                             </div>
                             <div class="form-group ">
-                                <input type="text" class="form-control" name="nama_akun" placeholder="Nama Coa">
+                                <input type="text" class="form-control" name="nama_akun" placeholder="Nama Akun">
                             </div>
                             <div class="form-group ">
                                 <input type="number" class="form-control" name="saldo_coa" placeholder="Saldo Coa">
@@ -143,12 +143,12 @@
                         <div class="modal-body">
                             <input type="hidden" name="id" id="editCoaId">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="editNoReff" name="no_reff"
+                                <input type="number" class="form-control" id="editNoReff" name="no_reff"
                                     placeholder="Nomor Reff" required>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="editNamaCoa" name="nama_akun"
-                                    placeholder="Nama Coa" required>
+                                    placeholder="Nama Akun" required>
                             </div>
                             <div class="form-group">
                                 <input type="number" class="form-control" id="editSaldoCoa" name="saldo_coa"

@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Coa;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -10,7 +9,7 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCell, WithEvents
+class LabaRugiExport implements FromCollection, WithHeadings, WithCustomStartCell, WithEvents
 {
     /**
      * Collection of CoA data.
@@ -20,17 +19,13 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
     public function collection()
     {
         return DB::table('cashflow as cf')
-            ->select(
-                'cf.name',
-                'cf.credit',
-                'cf.debet',
-                'cf.saldo',
-                'cf.date',
-                'cf.coa_id',
-                'c.nama_akun',
-            )
-            ->join('coa as c', 'c.id', 'cf.coa_id')
-            ->get();
+        ->select(
+            'c.nama_akun',
+            'cf.name',
+            'cf.saldo',
+        )
+        ->join('coa as c', 'c.id', 'cf.coa_id')
+        ->get();
     }
 
     /**
@@ -41,7 +36,9 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
     public function headings(): array
     {
         return [
-            'Nama Cashflow',
+            'Nama Akun',
+            'Keterangan Akun',
+            'Saldo',
         ];
     }
 
@@ -65,7 +62,7 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 // Adding a custom header
-                $event->sheet->setCellValue('A1', 'Daftar Cashflow');
+                $event->sheet->setCellValue('A1', 'Laba Rugi');
                 // Adding a custom footer
                 // $event->sheet->setCellValue('A50', 'Custom Footer');
                 // Applying bold style to the header

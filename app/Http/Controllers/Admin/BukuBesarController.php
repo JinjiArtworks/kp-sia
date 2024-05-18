@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\BukuBesarExport;
 use App\Exports\CashFlowExport;
 use App\Exports\CoaExport;
-use App\Exports\NeracaExport;
 use App\Http\Controllers\Controller;
 use App\Models\BukuBesar;
 use App\Models\CashFlow;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 
-class NeracaController extends Controller
+class BukuBesarController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -35,11 +34,13 @@ class NeracaController extends Controller
         $end_date = $request->end_date;
         $cashflow = DB::table('cashflow as cf')
             ->select(
-                'cf.name',
+                'cf.debet',
+                'cf.credit',
                 'cf.saldo',
                 'cf.date',
+                'cf.remarks',
+                'c.no_reff',
                 'c.nama_akun',
-                'c.id',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
             ->when(
@@ -48,34 +49,37 @@ class NeracaController extends Controller
                     return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
                 }
             )
-            // ->where('b.coa_id', ) menampilkan kode coa utk pendapatan dan biaya saja
             ->get();
-        return view('admin.neraca', compact('cashflow', 'start_date', 'end_date'));
+        return view('admin.bukubesar', compact('cashflow', 'start_date', 'end_date'));
     }
     public function exportExcel()
     {
         try {
-            return Excel::download(new NeracaExport, 'neraca.xlsx');
+            return Excel::download(new BukuBesarExport, 'bukubesar.xlsx');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to export users: ' . $e->getMessage());
         }
     }
     public function exportPDF()
     {
-        $neraca = DB::table('coa as c')
+        $bukubesar = DB::table('buku_besar as b')
             ->select(
+                'b.debet',
+                'b.credit',
+                'c.no_reff',
                 'c.nama_akun',
-                'c.saldo', // disini utk mendapatkan total saldo bisa pakai rumus count atau sum ?, di count berdasarkan saldo where id coa tertentu
+                'c.saldo',
                 'cf.date',
                 'cf.remarks',
             )
-            ->join('cashflow as cf', 'cf.coa_id', 'c.id')
+            ->join('coa as c', 'c.id', 'b.coa_id')
+            ->leftJoin('cashflow as cf', 'cf.coa_id', 'c.id')
             ->get();
-        $html = view('pdf.neraca', compact('neraca'))->render(); // render html pdf page, not the main blade pages!
+        $html = view('pdf.bukubesar', compact('bukubesar'))->render(); // render html pdf page, not the main blade pages!
 
         $mpdf = new Mpdf();
         $mpdf->WriteHTML($html);
 
-        return $mpdf->Output('neraca.pdf', 'D');
+        return $mpdf->Output('bukubesar.pdf', 'D');
     }
 }

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\CashFlowExport;
 use App\Exports\CoaExport;
 use App\Http\Controllers\Controller;
+use App\Models\BukuBesar;
 use App\Models\CashFlow;
 use App\Models\Coa;
-use App\Models\TipeCoa;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -25,26 +26,61 @@ class CashFlowController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    // public function index()
+    // {
+    //     $cashflow = CashFlow::all();
+    //     $coa = Coa::all();
+    //     return view('admin.cashflow', compact('cashflow', 'coa'));
+    // }
+    public function index(Request $request)
     {
-        $cashflow = CashFlow::all();
+        // dd($request->all());
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $cashflow = CashFlow::select(
+            '*',
+            // DB::raw("(SELECT cf.created_at FROM cashflow as cf ORDER BY cf.created_at DESC LIMIT 1) as lastRow")
+        )
+            ->when(
+                $request->start_date !=  null,
+                function ($q) use ($request) {
+                    return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
+                },
+            )->get();
         $coa = Coa::all();
-        return view('admin.cashflow', compact('cashflow', 'coa'));
+        return view('admin.cashflow', compact('cashflow', 'coa', 'start_date', 'end_date'));
     }
     public function store(Request $request)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required',
+        //     'debet' => 'required',
+        //     'credit' => 'required',
+        //     'date' => 'required',
+        //     'coa_id' => 'required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), 422);
+        // }
         $user = Auth::user()->id;
-        CashFlow::create([
+        $cashflow = CashFlow::whereCoaId($request->coa_id)->orderBy('created_at', 'desc')->first();
+        $newCashflow = CashFlow::create([
             'name' => $request->name,
-            'credit' => $request->credit,
-            'debet' => $request->debet,
-            'saldo' => $request->saldo,
+            'debet' => $request->debet ? $request->debet : 0,
+            'credit' => $request->credit ? $request->credit : 0,
+            'saldo' => $request->credit ? $cashflow->saldo - $request->credit : $cashflow->saldo + $request->debet,
             'remarks' => $request->remarks,
             'date' => $request->date,
             'coa_id' => $request->coa_id,
             'created_by' => $user,
         ]);
-        return redirect('/data-cashflow')->with('success', 'coa berhasil ditambahkan');;
+        BukuBesar::create([
+            'cashflow_id' => $newCashflow->id,
+            'coa_id' => $request->coa_id ? $request->coa_id : $cashflow->coa_id,
+            'debet' => $request->debet ? $request->debet : 0,
+            'credit' => $request->credit ? $request->credit : 0,
+        ]);
+        return redirect('/data-cashflow')->with('success', 'coa berhasil ditambahkan');
     }
     public function edit($id)
     {
@@ -54,20 +90,25 @@ class CashFlowController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user()->id;
-        $cashflow = CashFlow::find($request->id);
-        CashFlow::where('id', $request->id)
-            ->update(
-                [
-                    'name' => $request->name,
-                    'credit' => $request->credit,
-                    'debet' => $request->debet,
-                    'saldo' => $request->saldo,
-                    'remarks' => $request->remarks,
-                    'date' => $request->date,
-                    'coa_id' => $request->coa_id ? $request->coa_id : $cashflow->coa_id,
-                    'created_by' => $user,
-                ]
-            );
+        CashFlow::where('id', $request->id)->delete();
+
+        $cashflow = CashFlow::whereCoaId($request->coa_id)->orderBy('created_at', 'desc')->first();
+        $newCashflow = CashFlow::create([
+            'name' => $request->name,
+            'debet' => $request->debet ? $request->debet : 0,
+            'credit' => $request->credit ? $request->credit : 0,
+            'saldo' => $request->credit ? $cashflow->saldo - $request->credit : $cashflow->saldo + $request->debet,
+            'remarks' => $request->remarks,
+            'date' => $request->date,
+            'coa_id' => $request->coa_id,
+            'created_by' => $user,
+        ]);
+        BukuBesar::create([
+            'cashflow_id' => $newCashflow->id,
+            'coa_id' => $request->coa_id ? $request->coa_id : $cashflow->coa_id,
+            'debet' => $request->debet ? $request->debet : 0,
+            'credit' => $request->credit ? $request->credit : 0,
+        ]);
         return redirect('/data-cashflow')->with('success', 'coa berhasil diubah');
     }
     public function destroy($id)

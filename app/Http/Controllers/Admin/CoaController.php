@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\CoaExport;
 use App\Http\Controllers\Controller;
+use App\Models\CashFlow;
 use App\Models\Coa;
 use App\Models\TipeCoa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 
@@ -30,11 +33,21 @@ class CoaController extends Controller
     }
     public function store(Request $request)
     {
-        Coa::create([
+        $user = Auth::user()->id;
+        $today = Carbon::now();
+        $coa = Coa::create([
             'no_reff' => $request->no_reff,
             'nama_akun' => $request->nama_akun,
             'saldo' => $request->saldo_coa,
             'tipe_coa_id' => $request->tipe_coa,
+        ]);
+        CashFlow::create([
+            'name' => 'Saldo Awal',
+            'saldo' => $request->saldo_coa,
+            'date' => $today,
+            'remarks' => '-',
+            'coa_id' => $coa->id,
+            'created_by' => $user,
         ]);
         return redirect('/data-coa')->with('success', 'coa berhasil ditambahkan');;
     }

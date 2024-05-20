@@ -47,7 +47,7 @@ class CoaController extends Controller
             'date' => $today,
             'remarks' => '-',
             'coa_id' => $coa->id,
-            'created_by' => $user,
+            'user_id' => $user,
         ]);
         return redirect('/data-coa')->with('success', 'coa berhasil ditambahkan');;
     }

@@ -47,13 +47,6 @@
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
-            <tr>
-                <th>Nama Akun</th>
-                <th>Cashflow Name</th>
-                <th class="text-right">Saldo</th>
-            </tr>
-        </tfoot>
     </table>
     <hr>
 </body>

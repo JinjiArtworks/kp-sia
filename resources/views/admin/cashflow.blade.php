@@ -38,13 +38,13 @@
                             <table id="datatable-1" class="table data-table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Nama</th>
-                                        <th class="text-right">Credit</th>
+                                        <th>No Akun</th>
+                                        <th>Nama Akun</th>
+                                        <th>Keterangan</th>
+                                        <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
+                                        <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
-                                        <th>Remarks</th>
-                                        <th>Date</th>
-                                        <th>Nama Coa</th>
                                         <th>Dibuat Oleh</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -52,23 +52,22 @@
                                 <tbody>
                                     @foreach ($cashflow as $key => $item)
                                         <tr>
+                                            <td>{{ $item->no_reff }}</td>
+                                            <td>{{ $item->nama_akun }}</td>
                                             <td>{{ $item->name }}</td>
-                                            <td class="text-right">{{ formatToIDR($item->credit) }}</td>
-                                            <td class="text-right">{{ formatToIDR($item->debet) }}</td>
-                                            <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
-                                            <td>{{ $item->remarks }}</td>
                                             <td>{{ $item->date }}</td>
-                                            <td>{{ $item->coa->nama_akun }}</td>
-                                            <td>{{ $item->users->name }}</td>
+                                            <td class="text-right">{{ formatToIDR($item->debet) }}</td>
+                                            <td class="text-right">{{ formatToIDR($item->credit) }}</td>
+                                            <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+                                            <td>{{ $item->username }}</td>
                                             <td>
                                                 <div class="d-flex">
-                                                   
                                                     @if ($key == count($cashflow) - 1)
                                                         <button class="btn btn-warning btn-sm mr-1" type="button"
                                                             data-toggle="modal" data-target=".modal-edit-cashflow"
                                                             data-id="{{ $item->id }}" data-nama="{{ $item->name }}"
                                                             data-credit="{{ $item->credit }}"
-                                                            data-debet="{{ $item->debet }}" {{-- data-saldo="{{ $item->saldo }}" --}}
+                                                            data-debet="{{ $item->debet }}" 
                                                             data-remarks="{{ $item->remarks }}"
                                                             data-date="{{ $item->date }}"
                                                             data-coa_id="{{ $item->coa_id }}" data-placement="top"
@@ -83,7 +82,6 @@
                                                             </button>
                                                         </form>
                                                     @endif
-
                                                 </div>
                                             </td>
                                         </tr>
@@ -91,13 +89,13 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Nama</th>
-                                        <th>Credit</th>
-                                        <th>Debit</th>
+                                        <th>No Akun</th>
+                                        <th>Nama Akun</th>
+                                        <th>Keterangan</th>
+                                        <th>Tanggal</th>
+                                        <th class="text-right">Debit</th>
+                                        <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
-                                        <th>Remarks</th>
-                                        <th>Date</th>
-                                        <th>Nama Coa</th>
                                         <th>Dibuat Oleh</th>
                                         <th>Aksi</th>
                                     </tr>

@@ -24,7 +24,7 @@
                         <div class="card-body">
                             <p>Images in Bootstrap are made responsive to the image so that it scales
                                 with the parent element.</p>
-                            <form method="GET" action="{{ route('buku-besar.filterDate') }}">
+                            <form method="GET" action="{{ route('bukubesar.filterDate') }}">
                                 <div class="date-filter mb-2">
                                     <input type="date" name="start_date" value="{{ $start_date }}"
                                         placeholder="Start Date"> -
@@ -39,8 +39,8 @@
                                     <tr>
                                         <th>No Akun</th>
                                         <th>Nama Akun</th>
-                                        <th>Tanggal</th>
                                         <th>Keterangan</th>
+                                        <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
                                         <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
@@ -51,8 +51,8 @@
                                         <tr>
                                             <td>{{ $item->no_reff }}</td>
                                             <td>{{ $item->nama_akun }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td>{{ $item->date }}</td>
-                                            <td>{{ $item->remarks }}</td>
                                             <td class="text-right">{{ formatToIDR($item->debet) }}</td>
                                             <td class="text-right">{{ formatToIDR($item->credit) }}</td>
                                             <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
@@ -64,8 +64,8 @@
                                     <tr>
                                         <th>No Akun</th>
                                         <th>Nama Akun</th>
-                                        <th>Tanggal</th>
                                         <th>Keterangan</th>
+                                        <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
                                         <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
@@ -96,7 +96,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('buku-besar.export.pdf') }}'
+                        window.location.href = '{{ route('bukubesar.export.pdf') }}'
                     }
                 })
             })
@@ -113,7 +113,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('buku-besar.export.excel') }}'
+                        window.location.href = '{{ route('bukubesar.export.excel') }}'
                     }
                 })
             })

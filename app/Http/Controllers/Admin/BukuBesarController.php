@@ -38,7 +38,7 @@ class BukuBesarController extends Controller
                 'cf.credit',
                 'cf.saldo',
                 'cf.date',
-                'cf.remarks',
+                'cf.name',
                 'c.no_reff',
                 'c.nama_akun',
             )
@@ -62,20 +62,19 @@ class BukuBesarController extends Controller
     }
     public function exportPDF()
     {
-        $bukubesar = DB::table('buku_besar as b')
+        $cashflow = DB::table('cashflow as cf')
             ->select(
-                'b.debet',
-                'b.credit',
+                'cf.debet',
+                'cf.credit',
+                'cf.saldo',
+                'cf.date',
+                'cf.name',
                 'c.no_reff',
                 'c.nama_akun',
-                'c.saldo',
-                'cf.date',
-                'cf.remarks',
             )
-            ->join('coa as c', 'c.id', 'b.coa_id')
-            ->leftJoin('cashflow as cf', 'cf.coa_id', 'c.id')
+            ->join('coa as c', 'c.id', 'cf.coa_id')
             ->get();
-        $html = view('pdf.bukubesar', compact('bukubesar'))->render(); // render html pdf page, not the main blade pages!
+        $html = view('pdf.bukubesar', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 
         $mpdf = new Mpdf();
         $mpdf->WriteHTML($html);

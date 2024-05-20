@@ -17,6 +17,6 @@ class CashFlow extends Model
     public function users()
     {
         // created by, foreign key di cashflow, id pk di user.
-        return $this->belongsTo(User::class, 'created_by', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

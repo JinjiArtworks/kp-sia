@@ -32,32 +32,21 @@
         <thead>
             <tr>
                 <th>Nama Akun</th>
+                <th>Cashflow Name</th>
                 <th>Tanggal</th>
-                <th>Keterangan</th>
                 <th class="text-right">Saldo</th>
-                <th class="text-right">Total COA (x)</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($neraca as $item)
+            @foreach ($cashflow as $item)
                 <tr>
                     <td>{{ $item->nama_akun }}</td>
+                    <td>{{ $item->name }}</td>
                     <td>{{ $item->date }}</td>
-                    <td>{{ $item->remarks }}</td>
-                    <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
                     <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
-            <tr>
-                <th>Nama Akun</th>
-                <th>Tanggal</th>
-                <th>Keterangan</th>
-                <th class="text-right">Saldo</th>
-                <th class="text-right">Total COA (x)</th>
-            </tr>
-        </tfoot>
     </table>
     <hr>
 </body>

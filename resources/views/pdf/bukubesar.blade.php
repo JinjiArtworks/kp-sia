@@ -28,27 +28,28 @@
 
 <body>
     <h1>Buku Besar</h1>
-    <table>
+
+    <table id="datatable-1" class="table data-table table-striped table-bordered">
         <thead>
             <tr>
                 <th>No Akun</th>
                 <th>Nama Akun</th>
-                <th>Tanggal</th>
                 <th>Keterangan</th>
-                <th class="text-right">Credit</th>
+                <th>Tanggal</th>
                 <th class="text-right">Debit</th>
+                <th class="text-right">Credit</th>
                 <th class="text-right">Saldo</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($bukubesar as $item)
+            @foreach ($cashflow as $item)
                 <tr>
                     <td>{{ $item->no_reff }}</td>
                     <td>{{ $item->nama_akun }}</td>
+                    <td>{{ $item->name }}</td>
                     <td>{{ $item->date }}</td>
-                    <td>{{ $item->remarks }}</td>
-                    <td class="text-right">{{ formatToIDR($item->kredit) }}</td>
                     <td class="text-right">{{ formatToIDR($item->debet) }}</td>
+                    <td class="text-right">{{ formatToIDR($item->credit) }}</td>
                     <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
                 </tr>
             @endforeach

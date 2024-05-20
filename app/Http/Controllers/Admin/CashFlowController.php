@@ -11,6 +11,7 @@ use App\Models\Coa;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 
@@ -37,16 +38,22 @@ class CashFlowController extends Controller
         // dd($request->all());
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        $cashflow = CashFlow::select(
-            '*',
-            // DB::raw("(SELECT cf.created_at FROM cashflow as cf ORDER BY cf.created_at DESC LIMIT 1) as lastRow")
-        )
+        $cashflow = DB::table('cashflow as cf')
+            ->select(
+                'cf.*',
+                'c.no_reff',
+                'c.nama_akun',
+                'u.name as username',
+            )
+            ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('users as u', 'u.id', 'cf.user_id')
             ->when(
                 $request->start_date !=  null,
                 function ($q) use ($request) {
                     return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
-                },
-            )->get();
+                }
+            )
+            ->get();
         $coa = Coa::all();
         return view('admin.cashflow', compact('cashflow', 'coa', 'start_date', 'end_date'));
     }
@@ -68,11 +75,11 @@ class CashFlowController extends Controller
             'name' => $request->name,
             'debet' => $request->debet ? $request->debet : 0,
             'credit' => $request->credit ? $request->credit : 0,
-            'saldo' => $request->credit ? $cashflow->saldo - $request->credit : $cashflow->saldo + $request->debet,
+            'saldo' => $request->credit ? abs($cashflow->saldo - $request->credit) : abs($cashflow->saldo + $request->debet),
             'remarks' => $request->remarks,
             'date' => $request->date,
             'coa_id' => $request->coa_id,
-            'created_by' => $user,
+            'user_id' => $user,
         ]);
         BukuBesar::create([
             'cashflow_id' => $newCashflow->id,
@@ -101,7 +108,7 @@ class CashFlowController extends Controller
             'remarks' => $request->remarks,
             'date' => $request->date,
             'coa_id' => $request->coa_id,
-            'created_by' => $user,
+            'user_id' => $user,
         ]);
         BukuBesar::create([
             'cashflow_id' => $newCashflow->id,
@@ -126,7 +133,16 @@ class CashFlowController extends Controller
     }
     public function exportPDF()
     {
-        $cashflow = CashFlow::all();
+        $cashflow = DB::table('cashflow as cf')
+            ->select(
+                'cf.*',
+                'c.no_reff',
+                'c.nama_akun',
+                'u.name as username',
+            )
+            ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('users as u', 'u.id', 'cf.user_id')
+            ->get();
         $html = view('pdf.cashflow', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 
         $mpdf = new Mpdf();

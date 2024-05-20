@@ -38,7 +38,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Akun</th>
-                                        <th>Cashflow Name</th>
+                                        <th>Keterangan</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>
@@ -56,8 +56,8 @@
                                 <tfoot>
                                     <tr>
                                         <th>Nama Akun</th>
+                                        <th>Keterangan</th>
                                         <th>Tanggal</th>
-                                        <th>Cashflow Name</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>
                                 </tfoot>
@@ -86,7 +86,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('labarugi.export.pdf') }}'
+                        window.location.href = '{{ route('neraca.export.pdf') }}'
                     }
                 })
             })
@@ -103,7 +103,7 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '{{ route('labarugi.export.excel') }}'
+                        window.location.href = '{{ route('neraca.export.excel') }}'
                     }
                 })
             })

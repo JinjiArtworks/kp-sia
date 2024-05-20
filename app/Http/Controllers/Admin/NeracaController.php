@@ -42,6 +42,8 @@ class NeracaController extends Controller
                 'c.id',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->where('c.tipe_coa_id', 1)
+            ->orWhere('c.tipe_coa_id', 3)
             ->when(
                 $request->start_date !=  null,
                 function ($q) use ($request) {
@@ -62,16 +64,19 @@ class NeracaController extends Controller
     }
     public function exportPDF()
     {
-        $neraca = DB::table('coa as c')
+        $cashflow = DB::table('cashflow as cf')
             ->select(
-                'c.nama_akun',
-                'c.saldo', // disini utk mendapatkan total saldo bisa pakai rumus count atau sum ?, di count berdasarkan saldo where id coa tertentu
+                'cf.name',
+                'cf.saldo',
                 'cf.date',
-                'cf.remarks',
+                'c.nama_akun',
+                'c.id',
             )
-            ->join('cashflow as cf', 'cf.coa_id', 'c.id')
+            ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->where('c.tipe_coa_id', 1)
+            ->orWhere('c.tipe_coa_id', 3)
             ->get();
-        $html = view('pdf.neraca', compact('neraca'))->render(); // render html pdf page, not the main blade pages!
+        $html = view('pdf.neraca', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 
         $mpdf = new Mpdf();
         $mpdf->WriteHTML($html);

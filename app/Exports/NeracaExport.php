@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Coa;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -19,15 +18,15 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
      */
     public function collection()
     {
-        return DB::table('coa as c')
-            ->select(
-                'c.nama_akun',
-                'cf.date',
-                'cf.remarks',
-                'c.saldo', 
-            )
-            ->join('cashflow as cf', 'cf.coa_id', 'c.id')
-            ->get();
+        return DB::table('cashflow as cf')
+        ->select(
+            'c.nama_akun',
+            'cf.name',
+            'cf.date',
+            'cf.saldo',
+        )
+        ->join('coa as c', 'c.id', 'cf.coa_id')
+        ->get();
     }
 
     /**
@@ -39,8 +38,8 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
     {
         return [
             'Nama Akun',
+            'Keterangan Akun',
             'Tanggal',
-            'Catatan',
             'Saldo',
         ];
     }

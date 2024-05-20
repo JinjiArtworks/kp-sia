@@ -22,6 +22,7 @@ class LabaRugiExport implements FromCollection, WithHeadings, WithCustomStartCel
         ->select(
             'c.nama_akun',
             'cf.name',
+            'cf.date',
             'cf.saldo',
         )
         ->join('coa as c', 'c.id', 'cf.coa_id')
@@ -38,6 +39,7 @@ class LabaRugiExport implements FromCollection, WithHeadings, WithCustomStartCel
         return [
             'Nama Akun',
             'Keterangan Akun',
+            'Tanggal',
             'Saldo',
         ];
     }
@@ -74,7 +76,7 @@ class LabaRugiExport implements FromCollection, WithHeadings, WithCustomStartCel
                 ]);
 
                 // Applying bold style to the first row of actual data
-                $event->sheet->getStyle('A2:C2')->applyFromArray([
+                $event->sheet->getStyle('A2:D2')->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 12,

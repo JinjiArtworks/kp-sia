@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Coa;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -19,15 +18,16 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
      */
     public function collection()
     {
+
         return DB::table('cashflow as cf')
             ->select(
-                'cf.name',
-                'cf.credit',
-                'cf.debet',
-                'cf.saldo',
-                'cf.date',
-                'cf.coa_id',
+                'c.no_reff',
                 'c.nama_akun',
+                'cf.name',
+                'cf.date',
+                'cf.debet',
+                'cf.credit',
+                'cf.saldo',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
             ->get();
@@ -41,7 +41,13 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
     public function headings(): array
     {
         return [
-            'Nama Cashflow',
+            'No Akun',
+            'Nama Akun',
+            'Keterangan',
+            'Tanggal',
+            'Debet',
+            'Credit',
+            'Saldo',
         ];
     }
 
@@ -65,7 +71,7 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 // Adding a custom header
-                $event->sheet->setCellValue('A1', 'Daftar Cashflow');
+                $event->sheet->setCellValue('A1', 'Cash Flow');
                 // Adding a custom footer
                 // $event->sheet->setCellValue('A50', 'Custom Footer');
                 // Applying bold style to the header
@@ -77,7 +83,7 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
                 ]);
 
                 // Applying bold style to the first row of actual data
-                $event->sheet->getStyle('A2:C2')->applyFromArray([
+                $event->sheet->getStyle('A2:G2')->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 12,

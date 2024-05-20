@@ -38,7 +38,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Akun</th>
-                                        <th>Cashflow Name</th>
+                                        <th>Keterangan</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>
@@ -56,7 +56,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>Nama Akun</th>
-                                        <th>Cashflow Name</th>
+                                        <th>Keterangan</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>

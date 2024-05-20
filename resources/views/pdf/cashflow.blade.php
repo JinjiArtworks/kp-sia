@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Coa List</title>
+    <title>Buku Besar</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,19 +27,31 @@
 </head>
 
 <body>
-    <h1>Coa List</h1>
-    <table>
+    <h1>Cashflow</h1>
+    <table id="datatable-1" class="table data-table table-striped table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nama</th>
+                <th>No Akun</th>
+                <th>Nama Akun</th>
+                <th>Keterangan</th>
+                <th>Tanggal</th>
+                <th class="text-right">Debit</th>
+                <th class="text-right">Credit</th>
+                <th class="text-right">Saldo</th>
+                <th>Dibuat Oleh</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($cashflow as $item)
+            @foreach ($cashflow as $key => $item)
                 <tr>
-                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->no_reff }}</td>
+                    <td>{{ $item->nama_akun }}</td>
                     <td>{{ $item->name }}</td>
+                    <td>{{ $item->date }}</td>
+                    <td class="text-right">{{ formatToIDR($item->debet) }}</td>
+                    <td class="text-right">{{ formatToIDR($item->credit) }}</td>
+                    <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+                    <td>{{ $item->username }}</td>
                 </tr>
             @endforeach
         </tbody>

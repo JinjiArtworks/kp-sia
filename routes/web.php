@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('export-cashflow-pdf', [CashFlowController::class, 'exportPDF'])->name('export.pdf');
         
     });
-    Route::group(['as' => 'buku-besar.'], function () {
+    Route::group(['as' => 'bukubesar.'], function () {
         Route::get('buku-besar', [BukuBesarController::class, 'index'])->name('filterDate');
         Route::get('export-bukubesar-excel', [BukuBesarController::class, 'exportExcel'])->name('export.excel');
         Route::get('export-bukubesar-pdf', [BukuBesarController::class, 'exportPDF'])->name('export.pdf');

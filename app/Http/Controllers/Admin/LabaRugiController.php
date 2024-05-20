@@ -42,6 +42,7 @@ class LabaRugiController extends Controller
                 'c.id',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            // ->where('c.tipe_coa_id', 5)
             ->when(
                 $request->start_date !=  null,
                 function ($q) use ($request) {
@@ -66,9 +67,11 @@ class LabaRugiController extends Controller
             ->select(
                 'c.nama_akun',
                 'cf.name',
+                'cf.date',
                 'cf.saldo',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            // ->where('c.tipe_coa_id', 5)
             ->get();
         $html = view('pdf.labarugi', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 

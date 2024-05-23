@@ -19,14 +19,24 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
     public function collection()
     {
         return DB::table('cashflow as cf')
-        ->select(
-            'c.nama_akun',
-            'cf.name',
-            'cf.date',
-            'cf.saldo',
-        )
-        ->join('coa as c', 'c.id', 'cf.coa_id')
-        ->get();
+            ->select(
+                'c.nama_akun',
+                // 'cf.name',
+                'tc.name as coa_name',
+                'cf.saldo',
+            )
+            ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', '=', 'c.tipe_coa_id')
+            ->whereIn('c.tipe_coa_id', [1, 2, 3, 4])
+            ->whereIn('cf.id', function ($query) {
+                // where cf.id ada di tb cash flow
+                // Mengelompokkan data terakhir dari masing-masing coa_id berdasarkan id cashflow.
+                $query->select(DB::raw('MAX(id)'))
+                    // Max(id), is to get the latest entry from tb cashflow and grouped by the coa_id
+                    ->from('cashflow')
+                    ->groupBy('coa_id');
+            })
+            ->get();
     }
 
     /**
@@ -38,9 +48,10 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
     {
         return [
             'Nama Akun',
-            'Keterangan Akun',
-            'Tanggal',
+            // 'Keterangan Akun',
+            'Tipe Coa',
             'Saldo',
+
         ];
     }
 
@@ -65,8 +76,6 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
             AfterSheet::class => function (AfterSheet $event) {
                 // Adding a custom header
                 $event->sheet->setCellValue('A1', 'Laporan Neraca');
-                // Adding a custom footer
-                // $event->sheet->setCellValue('A50', 'Custom Footer');
                 // Applying bold style to the header
                 $event->sheet->getStyle('A1:A1')->applyFromArray([
                     'font' => [
@@ -74,14 +83,86 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
                         'size' => 14,
                     ],
                 ]);
-
                 // Applying bold style to the first row of actual data
-                $event->sheet->getStyle('A2:C2')->applyFromArray([
+                $event->sheet->getStyle('A2:E2')->applyFromArray([
                     'font' => [
                         'bold' => true,
-                        'size' => 12,
                     ],
                 ]);
+                $event->sheet->getStyle('A18:A30')->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                    ],
+                ]);
+                $setAset = DB::table('cashflow as cf')
+                    ->select(
+                        DB::raw('SUM(cf.saldo) as total_aset')
+                    )
+                    ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+                    ->where('c.tipe_coa_id', 1)
+                    ->whereIn('cf.id', function ($query) {
+                        $query->select(DB::raw('MAX(id)'))
+                            ->from('cashflow')
+                            ->groupBy('coa_id');
+                    })
+                    ->first();
+
+                // SET AKTIVA
+                $setAkumulasi = DB::table('cashflow as cf')
+                    ->select(
+                        DB::raw('SUM(cf.saldo) as total_akumulasi')
+                    )
+                    ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+                    ->where('c.tipe_coa_id', 2)
+                    ->whereIn('cf.id', function ($query) {
+                        $query->select(DB::raw('MAX(id)'))
+                            ->from('cashflow')
+                            ->groupBy('coa_id');
+                    })
+                    ->first();
+                $event->sheet->setCellValue('A18', 'Total Aset');
+                $event->sheet->setCellValue('D18', $setAset->total_aset);
+                $event->sheet->setCellValue('A19', 'Total Akumulasi');
+                $event->sheet->setCellValue('D19', $setAkumulasi->total_akumulasi);
+                $event->sheet->setCellValue('A20', 'Total Aktiva');
+                $event->sheet->setCellValue('D20', $setAset->total_aset - $setAkumulasi->total_akumulasi);
+                // END SET AKTIVA
+
+
+                // SET PASIVA
+                $setKewajiban = DB::table('cashflow as cf')
+                    ->select(
+                        DB::raw('SUM(cf.saldo) as total_kewajiban')
+                    )
+                    ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+                    ->where('c.tipe_coa_id', 3)
+                    ->whereIn('cf.id', function ($query) {
+                        $query->select(DB::raw('MAX(id)'))
+                            ->from('cashflow')
+                            ->groupBy('coa_id');
+                    })
+                    ->first();
+                $setEkuitas = DB::table('cashflow as cf')
+                    ->select(
+                        DB::raw('SUM(cf.saldo) as total_ekuitas')
+                    )
+                    ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+                    ->where('c.tipe_coa_id', 4)
+                    ->whereIn('cf.id', function ($query) {
+                        $query->select(DB::raw('MAX(id)'))
+                            ->from('cashflow')
+                            ->groupBy('coa_id');
+                    })
+                    ->first();
+
+                $event->sheet->setCellValue('A22', 'Total Kewajiban');
+                $event->sheet->setCellValue('D22', $setKewajiban->total_kewajiban);
+                $event->sheet->setCellValue('A23', 'Total Ekuitas');
+                $event->sheet->setCellValue('D23', $setEkuitas->total_ekuitas);
+                $event->sheet->setCellValue('A24', 'Total Pasiva');
+                $event->sheet->setCellValue('D24', $setKewajiban->total_kewajiban + $setEkuitas->total_ekuitas);
+
+                // End SET PASIVA
             },
         ];
     }

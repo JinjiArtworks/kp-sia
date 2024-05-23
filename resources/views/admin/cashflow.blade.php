@@ -31,7 +31,7 @@
                                         placeholder="Start Date"> -
                                     <input type="date" name="end_date" value="{{ $end_date }}"placeholder="End Date">
                                     <button class="btn btn-primary btn-sm">Filter</button>
-                                    <a href="/data-neraca" class="btn btn-secondary btn-sm">Reset</a>
+                                    <a href="/data-cashflow" class="btn btn-secondary btn-sm">Reset</a>
                                 </div>
                             </form>
 
@@ -41,12 +41,14 @@
                                         <th>No Akun</th>
                                         <th>Nama Akun</th>
                                         <th>Keterangan</th>
+                                        <th>Tipe Coa</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
                                         <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
+                                        <th class="text-right">Saldo Normal</th>
                                         <th>Dibuat Oleh</th>
-                                        <th>Aksi</th>
+                                        {{-- <th>Aksi</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,12 +57,14 @@
                                             <td>{{ $item->no_reff }}</td>
                                             <td>{{ $item->nama_akun }}</td>
                                             <td>{{ $item->name }}</td>
+                                            <td>{{ $item->coa_name }}</td>
                                             <td>{{ $item->date }}</td>
                                             <td class="text-right">{{ formatToIDR($item->debet) }}</td>
                                             <td class="text-right">{{ formatToIDR($item->credit) }}</td>
                                             <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+                                            <td>{{ $item->saldo_normal }}</td>
                                             <td>{{ $item->username }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 <div class="d-flex">
                                                     @if ($key == count($cashflow) - 1)
                                                         <button class="btn btn-warning btn-sm mr-1" type="button"
@@ -83,7 +87,7 @@
                                                         </form>
                                                     @endif
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -92,12 +96,14 @@
                                         <th>No Akun</th>
                                         <th>Nama Akun</th>
                                         <th>Keterangan</th>
+                                        <th>Tipe Coa</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
                                         <th class="text-right">Credit</th>
                                         <th class="text-right">Saldo</th>
+                                        <th>Saldo Normal</th>
                                         <th>Dibuat Oleh</th>
-                                        <th>Aksi</th>
+                                        {{-- <th>Aksi</th> --}}
                                     </tr>
                                 </tfoot>
                             </table>
@@ -134,17 +140,22 @@
                             <div class="form-group">
                                 <input type="date" class="form-control" name="date" placeholder="Saldo Coa">
                             </div>
-                            <select class="form-control choicesjs" id="coa-select" name="coa_id">
-                                <option value="z"> -- Select Coa -- </option>
-                                @foreach ($coa as $item)
-                                    <option value="{{ $item->id }}">
-                                        {{ $item->nama_akun }} - {{ formatToIDR($item->saldo) }}</option>
-                                @endforeach
-                            </select>
-                            {{-- <div class="form-group">
-                                <input type="number" class="form-control" name="saldo" id="saldo-input" readonly
-                                    placeholder="Saldo">
-                            </div> --}}
+                            <div class="form-group">
+                                <select class="form-control" id="coa-select" name="coa_id">
+                                    <option value=""> -- Select Coa -- </option>
+                                    @foreach ($coa as $item)
+                                        <option value="{{ $item->id }}" data-coa="{{ $item->saldo_normal }}">
+                                            {{ $item->nama_akun }} ({{ $item->tipe_coa->name }}) 
+                                            {{-- {{ formatToIDR($item->saldo) }} --}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="saldo_normal" id="saldo_normal" readonly
+                                    placeholder="Tipe Coa">
+                            </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-sm close-modal">Close</button>
@@ -154,72 +165,22 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-edit-cashflow" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form id="editCashFlowForm" method="POST" action="{{ route('cashflow.update') }}">
-                        @csrf
-                        @method('PUT')
-                        <div class="modal-header">
-                            <h5 class="modal-title">Edit Cash Flow</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" name="id" id="editCashFlowId">
-                            <input type="hidden" name="coa_id" id="editCoaId">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="editNameCashflow" name="name"
-                                    placeholder="Nama">
-                            </div>
-                            <div class="form-group">
-                                <input type="number" class="form-control" id="editCredit" name="credit"
-                                    placeholder="Credit">
-                            </div>
-                            <div class="form-group">
-                                <input type="number" class="form-control" id="editDebet" name="debet"
-                                    placeholder="Debet">
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-control" name="remarks" id="editRemarks" placeholder="Remarks"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="date" class="form-control" id="editDate" name="date"
-                                    placeholder="Saldo Coa">
-                            </div>
-                            {{-- <select class="form-control choicesjs" id="coa-select" name="coa_id">
-                                <option value=""> -- Select Coa -- </option>
-                                @foreach ($coa as $item)
-                                    <option value="{{ $item->id }}" data-saldo="{{ $item->saldo }}">
-                                        {{ $item->nama_akun }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="form-group">
-                                <input type="number" class="form-control" name="saldo" id="saldo-input" readonly
-                                    placeholder="Saldo">
-                            </div> --}}
-                            <!-- Add more fields as needed -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm close-modal"
-                                data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary btn-sm confirm-update">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
     </div>
 @endsection
 @section('script')
     <!-- jQuery and Bootstrap JS -->
     <script>
+        // document.getElementById("coa-select").addEventListener("change", function() {
+        //     const opt = this.options[this.selectedIndex];
+        //     console.log(opt.getAttribute("data-coa"))
+        // })
         $(document).ready(function() {
-
+            $("#coa-select").change(function(event) {
+                var selectedOption = $(this).find('option:selected');
+                var tipeCoaName = selectedOption.data('coa');
+                console.log(tipeCoaName);
+                $('#saldo_normal').val(tipeCoaName ? tipeCoaName : '');
+            });
             // Add click event listener to all buttons with the class "close-modal"
             $('.close-modal').click(function() {
                 $('.modal-cashflow').modal('hide')

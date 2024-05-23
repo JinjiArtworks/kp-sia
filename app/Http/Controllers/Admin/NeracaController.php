@@ -6,6 +6,7 @@ use App\Exports\BukuBesarExport;
 use App\Exports\CashFlowExport;
 use App\Exports\CoaExport;
 use App\Exports\NeracaExport;
+use App\Exports\NeracaViewExport;
 use App\Http\Controllers\Controller;
 use App\Models\BukuBesar;
 use App\Models\CashFlow;
@@ -30,28 +31,55 @@ class NeracaController extends Controller
     }
     public function index(Request $request)
     {
-        // dd($request->all());
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+        // $totalAktiva =
+        //     DB::table('cashflow as cf')
+        //     ->select(
+        //         DB::raw('SUM(cf.saldo) as total_aktiva')
+        //     )
+        //     ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+        //     ->where('c.tipe_coa_id', 1)
+        //     ->whereIn('cf.id', function ($query) {
+        //         // where cf.id ada di tb cash flow
+        //         // Mengelompokkan data terakhir dari masing-masing coa_id berdasarkan id cashflow.
+        //         $query->select(DB::raw('MAX(id)'))
+        //             // Max(id), is to get the latest entry from tb cashflow and grouped by the coa_id
+        //             ->from('cashflow')
+        //             ->groupBy('coa_id');
+        //     })
+        //     ->first();
+        // dd($totalAktiva);
         $cashflow = DB::table('cashflow as cf')
             ->select(
                 'cf.name',
                 'cf.saldo',
                 'cf.date',
                 'c.nama_akun',
+                'tc.name as coa_name',
                 'c.id',
+                'cf.coa_id',
+                // DB::raw('(SELECT SUM(cf.saldo) FROM cashflow cf WHERE cf.coa_id = 14) as total_saldo')
             )
-            ->join('coa as c', 'c.id', 'cf.coa_id')
-            ->where('c.tipe_coa_id', 1)
-            ->orWhere('c.tipe_coa_id', 3)
+            ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', '=', 'c.tipe_coa_id')
+            ->whereIn('cf.id', function ($query) {
+                // where cf.id ada di tb cash flow
+                // Mengelompokkan data terakhir dari masing-masing coa_id berdasarkan id cashflow.
+                $query->select(DB::raw('MAX(id)'))
+                    // Max(id), is to get the latest entry from tb cashflow and grouped by the coa_id
+                    ->from('cashflow')
+                    ->groupBy('coa_id');
+            })
+            ->whereIn('c.tipe_coa_id', [1, 2, 3, 4])
             ->when(
                 $request->start_date !=  null,
                 function ($q) use ($request) {
                     return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
                 }
             )
-            // ->where('b.coa_id', ) menampilkan kode coa utk pendapatan dan biaya saja
             ->get();
+
         return view('admin.neraca', compact('cashflow', 'start_date', 'end_date'));
     }
     public function exportExcel()
@@ -69,10 +97,12 @@ class NeracaController extends Controller
                 'cf.name',
                 'cf.saldo',
                 'cf.date',
+                'tc.name as coa_name',
                 'c.nama_akun',
                 'c.id',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
             ->where('c.tipe_coa_id', 1)
             ->orWhere('c.tipe_coa_id', 3)
             ->get();

@@ -24,12 +24,15 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
                 'c.no_reff',
                 'c.nama_akun',
                 'cf.name',
+                'tc.name as coa_name',
                 'cf.date',
                 'cf.debet',
                 'cf.credit',
                 'cf.saldo',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
+            ->orderBy('cf.date','asc')
             ->get();
     }
 
@@ -44,6 +47,7 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
             'No Akun',
             'Nama Akun',
             'Keterangan',
+            'Tipe Coa',
             'Tanggal',
             'Debet',
             'Credit',

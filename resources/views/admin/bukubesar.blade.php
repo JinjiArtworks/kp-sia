@@ -30,7 +30,7 @@
                                         placeholder="Start Date"> -
                                     <input type="date" name="end_date" value="{{ $end_date }}"placeholder="End Date">
                                     <button class="btn btn-primary btn-sm">Filter</button>
-                                    <a href="/data-neraca" class="btn btn-secondary btn-sm">Reset</a>
+                                    <a href="/buku-besar" class="btn btn-secondary btn-sm">Reset</a>
                                 </div>
                             </form>
 
@@ -40,6 +40,7 @@
                                         <th>No Akun</th>
                                         <th>Nama Akun</th>
                                         <th>Keterangan</th>
+                                        <th>Tipe Coa</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
                                         <th class="text-right">Credit</th>
@@ -52,6 +53,7 @@
                                             <td>{{ $item->no_reff }}</td>
                                             <td>{{ $item->nama_akun }}</td>
                                             <td>{{ $item->name }}</td>
+                                            <td>{{ $item->coa_name }}</td>
                                             <td>{{ $item->date }}</td>
                                             <td class="text-right">{{ formatToIDR($item->debet) }}</td>
                                             <td class="text-right">{{ formatToIDR($item->credit) }}</td>
@@ -65,6 +67,7 @@
                                         <th>No Akun</th>
                                         <th>Nama Akun</th>
                                         <th>Keterangan</th>
+                                        <th>Tipe Coa</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Debit</th>
                                         <th class="text-right">Credit</th>

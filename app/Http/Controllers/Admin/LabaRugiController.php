@@ -33,23 +33,33 @@ class LabaRugiController extends Controller
         // dd($request->all());
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        $cashflow = DB::table('cashflow as cf')
+        $cashflow =  DB::table('cashflow as cf')
             ->select(
                 'cf.name',
                 'cf.saldo',
                 'cf.date',
                 'c.nama_akun',
-                'c.id',
+                'tc.name as coa_name',
+                'c.id'
             )
-            ->join('coa as c', 'c.id', 'cf.coa_id')
-            // ->where('c.tipe_coa_id', 5)
+            ->join('coa as c', 'c.id', '=', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', '=', 'c.tipe_coa_id')
+            ->whereIn('cf.id', function ($query) {
+                // where cf.id ada di tb cash flow
+                // Mengelompokkan data terakhir dari masing-masing coa_id berdasarkan id cashflow.
+                $query->select(DB::raw('MAX(id)'))
+                    // Max(id), is to get the latest entry from tb cashflow and grouped by the coa_id
+                    ->from('cashflow')
+                    ->groupBy('coa_id');
+            })
+            ->where('c.tipe_coa_id', 5)
+            ->orWhere('c.tipe_coa_id', 6)
             ->when(
                 $request->start_date !=  null,
                 function ($q) use ($request) {
                     return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
                 }
             )
-            // ->where('b.coa_id', ) menampilkan kode coa utk pendapatan dan biaya saja
             ->get();
         return view('admin.labarugi', compact('cashflow', 'start_date', 'end_date'));
     }
@@ -67,10 +77,12 @@ class LabaRugiController extends Controller
             ->select(
                 'c.nama_akun',
                 'cf.name',
+                'tc.name as coa_name',
                 'cf.date',
                 'cf.saldo',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
             // ->where('c.tipe_coa_id', 5)
             ->get();
         $html = view('pdf.labarugi', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!

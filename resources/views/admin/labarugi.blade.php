@@ -30,7 +30,7 @@
                                         placeholder="Start Date"> -
                                     <input type="date" name="end_date" value="{{ $end_date }}"placeholder="End Date">
                                     <button class="btn btn-primary btn-sm">Filter</button>
-                                    <a href="/data-neraca" class="btn btn-secondary btn-sm">Reset</a>
+                                    <a href="/data-labarugi" class="btn btn-secondary btn-sm">Reset</a>
                                 </div>
                             </form>
 
@@ -39,6 +39,7 @@
                                     <tr>
                                         <th>Nama Akun</th>
                                         <th>Keterangan</th>
+                                        <th>Tipe Coa</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>
@@ -48,6 +49,7 @@
                                         <tr>
                                             <td>{{ $item->nama_akun }}</td>
                                             <td>{{ $item->name }}</td>
+                                            <td>{{ $item->coa_name }}</td>
                                             <td>{{ $item->date }}</td>
                                             <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
                                         </tr>
@@ -57,6 +59,7 @@
                                     <tr>
                                         <th>Nama Akun</th>
                                         <th>Keterangan</th>
+                                        <th>Tipe Coa</th>
                                         <th>Tanggal</th>
                                         <th class="text-right">Saldo</th>
                                     </tr>

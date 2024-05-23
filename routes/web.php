@@ -6,8 +6,7 @@ use App\Http\Controllers\Admin\LabaRugiController;
 use App\Http\Controllers\Admin\NeracaController;
 use App\Http\Controllers\Admin\CoaController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Models\BukuBesar;
-use App\Models\LabaRugi;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -22,8 +21,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::middleware(['auth'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::group(['as' => 'accounting.'], function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
@@ -40,12 +39,11 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['as' => 'cashflow.'], function () {
         Route::get('data-cashflow', [CashFlowController::class, 'index'])->name('filterDate');
         // Route::get('data-cashflow', [CashFlowController::class, 'index'])->name('cashflow');
-        Route::post('store', [CashFlowController::class, 'store'])->name('store');
-        Route::put('update', [CashFlowController::class, 'update'])->name('update');
-        Route::get('delete-cashflow/{id}', [CashFlowController::class, 'destroy'])->name('delete');
+        Route::post('store-cashflow', [CashFlowController::class, 'store'])->name('store');
+        // Route::put('update-cashflow', [CashFlowController::class, 'update'])->name('update');
+        // Route::get('delete-cashflow/{id}', [CashFlowController::class, 'destroy'])->name('delete');
         Route::get('export-cashflow-excel', [CashFlowController::class, 'exportExcel'])->name('export.excel');
         Route::get('export-cashflow-pdf', [CashFlowController::class, 'exportPDF'])->name('export.pdf');
-        
     });
     Route::group(['as' => 'bukubesar.'], function () {
         Route::get('buku-besar', [BukuBesarController::class, 'index'])->name('filterDate');
@@ -61,6 +59,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('data-labarugi', [LabaRugiController::class, 'index'])->name('filterDate');
         Route::get('export-labarugi-excel', [LabaRugiController::class, 'exportExcel'])->name('export.excel');
         Route::get('export-labarugi-pdf', [LabaRugiController::class, 'exportPDF'])->name('export.pdf');
+    });
+    Route::group(['as' => 'user.'], function () {
+        Route::get('data-user', [UserController::class, 'index'])->name('filterDate');
+        Route::post('store-user', [UserController::class, 'store'])->name('store');
+        Route::put('update-user', [UserController::class, 'update'])->name('update');
+        Route::get('delete-user/{id}', [UserController::class, 'destroy'])->name('delete');
     });
 });
 

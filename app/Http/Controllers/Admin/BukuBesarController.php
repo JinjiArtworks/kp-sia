@@ -39,10 +39,13 @@ class BukuBesarController extends Controller
                 'cf.saldo',
                 'cf.date',
                 'cf.name',
+                'tc.name as coa_name',
                 'c.no_reff',
                 'c.nama_akun',
+                'tc.name as coa_name',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
             ->when(
                 $request->start_date !=  null,
                 function ($q) use ($request) {
@@ -73,6 +76,7 @@ class BukuBesarController extends Controller
                 'c.nama_akun',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
+            ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
             ->get();
         $html = view('pdf.bukubesar', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 

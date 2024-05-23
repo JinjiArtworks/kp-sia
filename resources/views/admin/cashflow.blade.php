@@ -48,7 +48,6 @@
                                         <th class="text-right">Saldo</th>
                                         <th class="text-right">Saldo Normal</th>
                                         <th>Dibuat Oleh</th>
-                                        {{-- <th>Aksi</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,30 +63,6 @@
                                             <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
                                             <td>{{ $item->saldo_normal }}</td>
                                             <td>{{ $item->username }}</td>
-                                            {{-- <td>
-                                                <div class="d-flex">
-                                                    @if ($key == count($cashflow) - 1)
-                                                        <button class="btn btn-warning btn-sm mr-1" type="button"
-                                                            data-toggle="modal" data-target=".modal-edit-cashflow"
-                                                            data-id="{{ $item->id }}" data-nama="{{ $item->name }}"
-                                                            data-credit="{{ $item->credit }}"
-                                                            data-debet="{{ $item->debet }}" 
-                                                            data-remarks="{{ $item->remarks }}"
-                                                            data-date="{{ $item->date }}"
-                                                            data-coa_id="{{ $item->coa_id }}" data-placement="top"
-                                                            title="Edit Cashflow">
-                                                            <i class="fa-solid fa-pencil"></i>
-                                                        </button>
-                                                        <form method="GET"
-                                                            action="{{ route('cashflow.delete', ['id' => $item->id]) }}">
-                                                            <button type="submit"
-                                                                class="confirmDelete btn btn-sm btn-danger">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                </div>
-                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>

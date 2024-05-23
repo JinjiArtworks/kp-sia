@@ -25,6 +25,7 @@
                                             <th>Nama Akun</th>
                                             <th>Akun Coa</th>
                                             <th class="text-right">Saldo</th>
+                                            <th>Saldo Normal</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -35,6 +36,7 @@
                                                 <td>{{ $item->nama_akun }}</td>
                                                 <td>{{ $item->tipe_coa->name }}</td>
                                                 <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+                                                <td>{{ $item->saldo_normal }}</td>
                                                 <td>
                                                     <div class="d-flex">
                                                         {{-- <button class="btn btn-primary btn-sm mr-1" type="button"
@@ -56,18 +58,19 @@
                                                             data-toggle="modal" data-target=".modal-edit-coa"
                                                             data-id="{{ $item->id }}" data-nama="{{ $item->nama_akun }}"
                                                             data-saldo_coa="{{ $item->saldo }}"
+                                                            data-saldo_normal="{{ $item->saldo_normal }}"
                                                             data-no_reff="{{ $item->no_reff }}"
                                                             data-tipe_coa="{{ $item->tipe_coa_id }}" data-placement="top"
                                                             title="Edit COA">
                                                             <i class="fa-solid fa-pencil"></i>
                                                         </button>
-                                                        <form method="GET"
+                                                        {{-- <form method="GET"
                                                             action="{{ route('coa.delete-coa', ['id' => $item->id]) }}">
                                                             <button type="submit"
                                                                 class="confirmDelete btn btn-sm btn-danger">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
-                                                        </form>
+                                                        </form> --}}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -79,6 +82,7 @@
                                             <th>Nama Akun</th>
                                             <th>Tipe Coa</th>
                                             <th class="text-right">Saldo</th>
+                                            <th>Saldo Normal</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
@@ -110,7 +114,12 @@
                             <div class="form-group ">
                                 <input type="number" class="form-control" name="saldo_coa" placeholder="Saldo Coa">
                             </div>
-                            <select class="form-control choicesjs" id="editTipeCoa" name="tipe_coa">
+                            <select class="form-control choicesjs" name="saldo_normal">
+                                <option value=""> -- Saldo Normal-- </option>
+                                <option value="Debit">Debit</option>
+                                <option value="Kredit">Kredit</option>
+                            </select>
+                            <select class="form-control choicesjs" name="tipe_coa">
                                 <option value=""> -- Select Coa -- </option>
                                 @foreach ($tipe_coa as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -154,6 +163,11 @@
                                 <input type="number" class="form-control" id="editSaldoCoa" name="saldo_coa"
                                     placeholder="Saldo Coa" required>
                             </div>
+                            <select class="form-control choicesjs" id="editSaldoNormal" name="saldo_normal">
+                                <option value=""> -- Saldo Normal-- </option>
+                                <option value="Debit">Debit</option>
+                                <option value="Kredit">Kredit</option>
+                            </select>
                             <div class="form-group">
                                 <select class="form-control choicesjs" id="editTipeCoa" name="tipe_coa">
                                     <option value=""> -- Select Coa -- </option>
@@ -190,6 +204,7 @@
                 var id = target.data('id')
                 var nama = target.data('nama')
                 var saldo_coa = target.data('saldo_coa')
+                var saldo_normal = target.data('saldo_normal')
                 var tipe_coa = target.data('tipe_coa')
                 var no_reff = target.data('no_reff') // diambil dari parmas data-xxx
                 var modal = $(this)
@@ -197,27 +212,29 @@
                 modal.find('#editNamaCoa').val(nama)
                 modal.find('#editSaldoCoa').val(saldo_coa)
                 modal.find('#editNoReff').val(no_reff)
+                modal.find('#editSaldoNormal').val(saldo_normal)
                 // modal.find('#editTipeCoa').val(tipe_coa)
                 modal.find('#editTipeCoa option[value="' + tipe_coa + '"]').prop('selected', true);
             })
 
             // Confirmation Button
             $('.confirmDelete').click(function(event) {
-                event.preventDefault()
-                var form = $(this).closest("form")
-                Swal.fire({
-                    title: 'Hapus Data?',
-                    text: 'Data ini akan terhapus secara permanen',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit()
-                    }
-                })
+                console.log('asd');
+                // event.preventDefault()
+                // var form = $(this).closest("form")
+                // Swal.fire({
+                //     title: 'Hapus Data?',
+                //     text: 'Data ini akan terhapus secara permanen',
+                //     icon: 'warning',
+                //     showCancelButton: true,
+                //     confirmButtonColor: '#3085d6',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: 'Yes'
+                // }).then((result) => {
+                //     if (result.isConfirmed) {
+                //         form.submit()
+                //     }
+                // })
             })
 
             $('.confirm-update').click(function(event) {

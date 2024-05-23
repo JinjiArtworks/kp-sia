@@ -32,6 +32,7 @@ class CashFlowExport implements FromCollection, WithHeadings, WithCustomStartCel
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
             ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
+            ->where('cf.name', '!=', 'Saldo Awal')
             ->orderBy('cf.date','asc')
             ->get();
     }

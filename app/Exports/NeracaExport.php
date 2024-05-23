@@ -121,11 +121,11 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
                     })
                     ->first();
                 $event->sheet->setCellValue('A18', 'Total Aset');
-                $event->sheet->setCellValue('D18', $setAset->total_aset);
+                $event->sheet->setCellValue('C18', $setAset->total_aset);
                 $event->sheet->setCellValue('A19', 'Total Akumulasi');
-                $event->sheet->setCellValue('D19', $setAkumulasi->total_akumulasi);
+                $event->sheet->setCellValue('C19', $setAkumulasi->total_akumulasi);
                 $event->sheet->setCellValue('A20', 'Total Aktiva');
-                $event->sheet->setCellValue('D20', $setAset->total_aset - $setAkumulasi->total_akumulasi);
+                $event->sheet->setCellValue('C20', $setAset->total_aset - $setAkumulasi->total_akumulasi);
                 // END SET AKTIVA
 
 
@@ -156,11 +156,11 @@ class NeracaExport implements FromCollection, WithHeadings, WithCustomStartCell,
                     ->first();
 
                 $event->sheet->setCellValue('A22', 'Total Kewajiban');
-                $event->sheet->setCellValue('D22', $setKewajiban->total_kewajiban);
+                $event->sheet->setCellValue('C22', $setKewajiban->total_kewajiban);
                 $event->sheet->setCellValue('A23', 'Total Ekuitas');
-                $event->sheet->setCellValue('D23', $setEkuitas->total_ekuitas);
+                $event->sheet->setCellValue('C23', $setEkuitas->total_ekuitas);
                 $event->sheet->setCellValue('A24', 'Total Pasiva');
-                $event->sheet->setCellValue('D24', $setKewajiban->total_kewajiban + $setEkuitas->total_ekuitas);
+                $event->sheet->setCellValue('C24', $setKewajiban->total_kewajiban + $setEkuitas->total_ekuitas);
 
                 // End SET PASIVA
             },

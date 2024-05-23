@@ -56,6 +56,7 @@ class CashFlowController extends Controller
                     return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
                 }
             )
+            ->where('cf.name', '!=', 'Saldo Awal')
             ->get();
         $coa = Coa::all();
         // dd($coa->tipe_coa->name);
@@ -113,13 +114,15 @@ class CashFlowController extends Controller
             ->select(
                 'cf.*',
                 'c.no_reff',
-                'tc.name as coa_name',
                 'c.nama_akun',
+                'tc.name as coa_name',
                 'u.name as username',
+                'c.saldo_normal',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
             ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
             ->join('users as u', 'u.id', 'cf.user_id')
+            ->where('cf.name', '!=', 'Saldo Awal')
             ->get();
         $html = view('pdf.cashflow', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 

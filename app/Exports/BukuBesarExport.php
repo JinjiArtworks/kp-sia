@@ -87,7 +87,7 @@ class BukuBesarExport implements FromCollection, WithHeadings, WithCustomStartCe
                 ]);
 
                 // Applying bold style to the first row of actual data
-                $event->sheet->getStyle('A2:G2')->applyFromArray([
+                $event->sheet->getStyle('A2:H2')->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 12,

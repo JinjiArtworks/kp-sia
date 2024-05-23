@@ -52,8 +52,57 @@ class BukuBesarController extends Controller
                     return $q->whereBetween('cf.date', [$request->start_date, $request->end_date]);
                 }
             )
+            ->orderBy('cf.date','asc')
             ->get();
-        return view('admin.bukubesar', compact('cashflow', 'start_date', 'end_date'));
+        $kas = CashFlow::whereCoaId(1)->get();
+        $piutangUsaha = CashFlow::whereCoaId(2)->get();
+        $sewaDimuka = CashFlow::whereCoaId(3)->get();
+        $asuransiDimuka = CashFlow::whereCoaId(4)->get();
+        $sediaanHabisPakai = CashFlow::whereCoaId(5)->get();
+        $hutangUsaha = CashFlow::whereCoaId(6)->get();
+        $hutangBankTop = CashFlow::whereCoaId(7)->get();
+        $hutangBankMaju = CashFlow::whereCoaId(8)->get();
+        $uangMukaMember = CashFlow::whereCoaId(9)->get();
+        $modelHelena = CashFlow::whereCoaId(10)->get();
+        $akDepresiasi = CashFlow::whereCoaId(11)->get();
+        $hutangGaji = CashFlow::whereCoaId(12)->get();
+        $prive = CashFlow::whereCoaId(13)->get();
+        $pendapatanNonMember = CashFlow::whereCoaId(14)->get();
+        $pendapatanMember = CashFlow::whereCoaId(15)->get();
+        $biayaGaji = CashFlow::whereCoaId(16)->get();
+        $biayaAsuransi = CashFlow::whereCoaId(17)->get();
+        $biayaSewa = CashFlow::whereCoaId(18)->get();
+        $biayaListrikEtc = CashFlow::whereCoaId(19)->get();
+        $biayaLainLain = CashFlow::whereCoaId(20)->get();
+        $biayaDepresiasiPeralatan = CashFlow::whereCoaId(21)->get();
+        $peralatanSalon = CashFlow::whereCoaId(22)->get();
+        return view('admin.bukubesar', compact(
+            'cashflow',
+            'kas',
+            'piutangUsaha',
+            'sewaDimuka',
+            'asuransiDimuka',
+            'sediaanHabisPakai',
+            'hutangUsaha',
+            'hutangBankTop',
+            'hutangBankMaju',
+            'uangMukaMember',
+            'modelHelena',
+            'akDepresiasi',
+            'hutangGaji',
+            'prive',
+            'pendapatanNonMember',
+            'pendapatanMember',
+            'biayaGaji',
+            'biayaAsuransi',
+            'biayaSewa',
+            'biayaListrikEtc',
+            'biayaLainLain',
+            'biayaDepresiasiPeralatan',
+            'peralatanSalon',
+            'start_date',
+            'end_date'
+        ));
     }
     public function exportExcel()
     {
@@ -72,11 +121,14 @@ class BukuBesarController extends Controller
                 'cf.saldo',
                 'cf.date',
                 'cf.name',
+                'tc.name as coa_name',
                 'c.no_reff',
                 'c.nama_akun',
+                'tc.name as coa_name',
             )
             ->join('coa as c', 'c.id', 'cf.coa_id')
             ->join('tipe_coa as tc', 'tc.id', 'c.tipe_coa_id')
+            ->orderBy('cf.date','asc')
             ->get();
         $html = view('pdf.bukubesar', compact('cashflow'))->render(); // render html pdf page, not the main blade pages!
 

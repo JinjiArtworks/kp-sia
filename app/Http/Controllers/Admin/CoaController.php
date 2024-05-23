@@ -33,12 +33,14 @@ class CoaController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user()->id;
         $today = Carbon::now();
         $coa = Coa::create([
             'no_reff' => $request->no_reff,
             'nama_akun' => $request->nama_akun,
             'saldo' => $request->saldo_coa,
+            'saldo_normal' => $request->saldo_normal,
             'tipe_coa_id' => $request->tipe_coa,
         ]);
         CashFlow::create([
@@ -64,6 +66,7 @@ class CoaController extends Controller
                 [
                     'no_reff' => $request->no_reff,
                     'nama_akun' => $request->nama_akun,
+                    'saldo_normal' => $request->saldo_normal ? $request->saldo_normal : $coa->saldo_normal,
                     'saldo' => $request->saldo_coa,
                     'tipe_coa_id' => $request->tipe_coa ? $request->tipe_coa : $coa->tipe_coa_id,
                 ]

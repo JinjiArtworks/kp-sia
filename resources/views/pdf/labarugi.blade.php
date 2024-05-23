@@ -32,8 +32,8 @@
         <thead>
             <tr>
                 <th>Nama Akun</th>
-                <th>Cashflow Name</th>
-                <th>Tanggal</th>
+                {{-- <th>Keterangan</th> --}}
+                <th>Tipe Coa</th>
                 <th class="text-right">Saldo</th>
             </tr>
         </thead>
@@ -41,12 +41,20 @@
             @foreach ($cashflow as $item)
                 <tr>
                     <td>{{ $item->nama_akun }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->date }}</td>
+                    {{-- <td>{{ $item->name }}</td> --}}
+                    <td>{{ $item->coa_name }}</td>
                     <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <th>Nama Akun</th>
+                {{-- <th>Keterangan</th> --}}
+                <th>Tipe Coa</th>
+                <th class="text-right">Saldo</th>
+            </tr>
+        </tfoot>
     </table>
     <hr>
 </body>

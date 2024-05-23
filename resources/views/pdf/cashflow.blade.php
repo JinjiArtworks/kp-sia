@@ -34,10 +34,12 @@
                 <th>No Akun</th>
                 <th>Nama Akun</th>
                 <th>Keterangan</th>
+                <th>Tipe Coa</th>
                 <th>Tanggal</th>
                 <th class="text-right">Debit</th>
                 <th class="text-right">Credit</th>
                 <th class="text-right">Saldo</th>
+                <th class="text-right">Saldo Normal</th>
                 <th>Dibuat Oleh</th>
             </tr>
         </thead>
@@ -47,14 +49,30 @@
                     <td>{{ $item->no_reff }}</td>
                     <td>{{ $item->nama_akun }}</td>
                     <td>{{ $item->name }}</td>
+                    <td>{{ $item->coa_name }}</td>
                     <td>{{ $item->date }}</td>
                     <td class="text-right">{{ formatToIDR($item->debet) }}</td>
                     <td class="text-right">{{ formatToIDR($item->credit) }}</td>
                     <td class="text-right">{{ formatToIDR($item->saldo) }}</td>
+                    <td>{{ $item->saldo_normal }}</td>
                     <td>{{ $item->username }}</td>
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <th>No Akun</th>
+                <th>Nama Akun</th>
+                <th>Keterangan</th>
+                <th>Tipe Coa</th>
+                <th>Tanggal</th>
+                <th class="text-right">Debit</th>
+                <th class="text-right">Credit</th>
+                <th class="text-right">Saldo</th>
+                <th>Saldo Normal</th>
+                <th>Dibuat Oleh</th>
+            </tr>
+        </tfoot>
     </table>
     <hr>
 </body>

@@ -88,7 +88,7 @@
                                         aria-expanded="false">
                                         <img src="{{ asset('images/user/1.jpg') }}" class="img-fluid avatar-rounded"
                                             alt="user">
-                                        <span class="mb-0 ml-2 user-name">John Doe</span>
+                                        <span class="mb-0 ml-2 user-name">{{ Auth::user()->name }}</span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                         <li class="dropdown-item  d-flex svg-icon border-top">

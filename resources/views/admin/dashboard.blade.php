@@ -120,7 +120,7 @@
                                 <li class="p-3 list-item d-flex justify-content-start align-items-center">
                                     <div class="avatar">
                                         <img class="avatar avatar-img avatar-60 rounded"
-                                            src="../assets/images/products/1.jpg" alt="1.jpg">
+                                            src="{{ asset('images/products/1.jpg') }}" alt="1.jpg">
                                     </div>
                                     <div class="list-style-detail ml-3 mr-2">
                                         <p class="mb-0">Rockerz Bluetooth Headset</p>
@@ -132,7 +132,7 @@
                                 <li class="p-3 list-item d-flex justify-content-start align-items-center">
                                     <div class="avatar">
                                         <img class="avatar avatar-img avatar-60 rounded"
-                                            src="../assets/images/products/2.jpg" alt="2.jpg">
+                                            src="{{ asset('images/products/2.jpg') }}" alt="2.jpg">
                                     </div>
                                     <div class="list-style-detail ml-3 mr-2">
                                         <p class="mb-0">Wifi Security Camera</p>
@@ -144,7 +144,7 @@
                                 <li class="p-3 list-item d-flex justify-content-start align-items-center">
                                     <div class="avatar">
                                         <img class="avatar avatar-img avatar-60 rounded"
-                                            src="../assets/images/products/13.jpg" alt="3.jpg">
+                                            src="{{ asset('images/products/13.jpg') }}" alt="3.jpg">
                                     </div>
                                     <div class="list-style-detail ml-3 mr-2">
                                         <p class="mb-0">Stone Bluetooth Speaker</p>
@@ -156,7 +156,7 @@
                                 <li class="p-3 list-item d-flex justify-content-start align-items-center">
                                     <div class="avatar">
                                         <img class="avatar avatar-img avatar-60 rounded"
-                                            src="../assets/images/products/4.jpg" alt="4.jpg">
+                                            src="{{ asset('images/products/4.jpg') }}" alt="4.jpg">
                                     </div>
                                     <div class="list-style-detail ml-3 mr-2">
                                         <p class="mb-0">Ryzen 5 Hexa Core 5600H</p>
@@ -183,7 +183,8 @@
                                                 data-type="percent"></div>
                                         </div>
                                         <div class="ml-3">
-                                            <h5 class="text-white font-weight-bold">1,860 <small> /3k Target</small></h5>
+                                            <h5 class="text-white font-weight-bold">1,860 <small> /3k
+                                                    Target</small></h5>
                                             <small class="mb-0">Order In Period</small>
                                         </div>
                                     </div>
@@ -484,7 +485,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-45 mr-2">
-                                                        <img src="../assets/images/user/2.jpg"
+                                                        <img src="{{ asset('images/user/2.jpg') }}"
                                                             class="img-fluid rounded-circle" alt="image">
                                                     </div>
                                                     <div>Maggie Potts</div>
@@ -508,7 +509,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-45 mr-2">
-                                                        <img src="../assets/images/user/5.jpg"
+                                                        <img src="{{ asset('images/user/5.jpg') }}"
                                                             class="img-fluid rounded-circle" alt="image">
                                                     </div>
                                                     <div>Kevin Adkins</div>
@@ -532,7 +533,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-45 mr-2">
-                                                        <img src="../assets/images/user/1.jpg"
+                                                        <img src="{{ asset('images/user/1.jpg') }}"
                                                             class="img-fluid rounded-circle" alt="image">
                                                     </div>
                                                     <div>Max Lynn</div>
@@ -556,7 +557,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-45 mr-2">
-                                                        <img src="../assets/images/user/3.jpg"
+                                                        <img src="{{ asset('images/user/3.jpg') }}"
                                                             class="img-fluid rounded-circle" alt="image">
                                                     </div>
                                                     <div>Danniw Yatt</div>
@@ -596,15 +597,4 @@
             <!-- Page end  -->
         </div>
     </div>
-@endsection
-@section('script')
-    <script class="text/javascript">
-        $(document).ready(function() {
-            // Add click event listener to the close button
-            $('#closeModalButton').click(function() {
-                // Close the modal manually
-                $('.modal-coa').modal('hide');
-            });
-        });
-    </script>
 @endsection

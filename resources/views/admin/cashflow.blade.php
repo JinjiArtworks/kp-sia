@@ -120,15 +120,15 @@
                                     <option value=""> -- Select Coa -- </option>
                                     @foreach ($coa as $item)
                                         <option value="{{ $item->id }}" data-coa="{{ $item->saldo_normal }}">
-                                            {{ $item->nama_akun }} ({{ $item->tipe_coa->name }}) 
+                                            {{ $item->nama_akun }} ({{ $item->tipe_coa->name }})
                                             {{-- {{ formatToIDR($item->saldo) }} --}}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="hidden" class="form-control" name="saldo_normal" id="saldo_normal" readonly
-                                    placeholder="Tipe Coa">
+                                <input type="hidden" class="form-control" name="saldo_normal" id="saldo_normal"
+                                    readonly placeholder="Tipe Coa">
                             </div>
 
                         </div>
@@ -152,7 +152,7 @@
         $(document).ready(function() {
             $("#coa-select").change(function(event) {
                 var selectedOption = $(this).find('option:selected');
-                var tipeCoaName = selectedOption.data('coa');
+                var tipeCoaName = selectedOption.data('coa'); // getting the properties of data-coa. 
                 console.log(tipeCoaName);
                 $('#saldo_normal').val(tipeCoaName ? tipeCoaName : '');
             });

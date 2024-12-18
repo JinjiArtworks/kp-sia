@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Datum | CRM Admin Dashboard Template</title>
+    <title>Reka | Sistem Informasi Akuntansi</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" />
@@ -121,7 +121,7 @@
                         alt="logo">
                     <img src="{{ asset('images/logo-dark.png') }}"
                         class="img-fluid rounded-normal d-none sidebar-light-img" alt="logo">
-                    <span>Datum</span>
+                    <span>REKA</span>
                 </a>
                 <div class="side-menu-bt-sidebar-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="text-light wrapper-menu" width="30"
